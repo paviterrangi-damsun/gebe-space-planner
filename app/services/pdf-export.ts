@@ -94,12 +94,20 @@ function renderPlanPage(doc: jsPDF, data: PlanExportData): void {
   }
 }
 
-export function exportPlanToPdf(data: PlanExportData): void {
+/** Builds the single-plan PDF document without saving it, so callers can also read its bytes. */
+export function buildPlanPdfDoc(data: PlanExportData): jsPDF {
   const doc = new jsPDF({ unit: 'pt', format: 'a4' })
   renderPlanPage(doc, data)
+  return doc
+}
 
-  const fileName = `${(data.projectName || 'floorplan').replace(/[^a-z0-9_-]+/gi, '_')}.pdf`
-  doc.save(fileName)
+export function planPdfFileName(data: PlanExportData): string {
+  return `${(data.projectName || 'floorplan').replace(/[^a-z0-9_-]+/gi, '_')}.pdf`
+}
+
+export function exportPlanToPdf(data: PlanExportData): void {
+  const doc = buildPlanPdfDoc(data)
+  doc.save(planPdfFileName(data))
 }
 
 /** Builds a single PDF containing a cover summary plus one detail page per plan. */

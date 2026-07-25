@@ -243,6 +243,25 @@
       "roomTypeLabel": "房间类型",
       "openSidebar": "打开侧边栏"
     },
+    "downloadDialog": {
+      "title": "下载您的平面图",
+      "description": "请填写您的信息以下载平面图。我们也会通过邮件为您发送一份副本。",
+      "nameLabel": "姓名",
+      "namePlaceholder": "您的姓名",
+      "nameRequired": "请输入您的姓名。",
+      "emailLabel": "邮箱",
+      "emailPlaceholder": "you@example.com",
+      "emailInvalid": "请输入有效的邮箱地址。",
+      "phoneLabel": "电话号码",
+      "phonePlaceholder": "您的电话号码",
+      "messageLabel": "留言",
+      "messagePlaceholder": "其他备注或需求（选填）",
+      "cancel": "取消",
+      "submit": "下载平面图",
+      "submitting": "提交中...",
+      "success": "平面图已下载！我们已收到您的信息。",
+      "error": "平面图已下载，但发送信息失败，请重试。"
+    },
     "bedSizeInput": {
       "title": "床尺寸",
       "bedDimensions": "床铺尺寸",

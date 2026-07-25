@@ -240,8 +240,27 @@
       "saving": "正在保存平面图...",
       "saveSuccess": "平面图保存成功！",
       "saveError": "平面图保存失败。请重试。",
-      "roomTypeLabel": "房间类型",
-      "openSidebar": "打开侧边栏"
+      "roomTypeLabel": "房間類型",
+      "openSidebar": "打開側邊欄"
+    },
+    "downloadDialog": {
+      "title": "下載您的平面圖",
+      "description": "請填寫您的資訊以下載平面圖。我們也會透過郵件為您發送一份副本。",
+      "nameLabel": "姓名",
+      "namePlaceholder": "您的姓名",
+      "nameRequired": "請輸入您的姓名。",
+      "emailLabel": "電子郵件",
+      "emailPlaceholder": "you@example.com",
+      "emailInvalid": "請輸入有效的電子郵件地址。",
+      "phoneLabel": "電話號碼",
+      "phonePlaceholder": "您的電話號碼",
+      "messageLabel": "留言",
+      "messagePlaceholder": "其他備註或需求（選填）",
+      "cancel": "取消",
+      "submit": "下載平面圖",
+      "submitting": "提交中...",
+      "success": "平面圖已下載！我們已收到您的資訊。",
+      "error": "平面圖已下載，但發送資訊失敗，請重試。"
     },
     "bedSizeInput": {
       "title": "床尺寸",

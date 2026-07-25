@@ -13,11 +13,12 @@ import { BedSizeInput } from './BedSizeInput'
 import { FloorplannerControls } from './FloorplannerControls'
 import { TextureSelector } from './TextureSelector'
 import { SaveFloorplanDialog } from './SaveFloorplanDialog'
+import { DownloadPlanDialog, type DownloadPlanFormData } from './DownloadPlanDialog'
 import { TouchHelp } from './TouchHelp'
 import { ControlsHelp } from './ControlsHelp'
 import DefaultFloorplan from '@blueprint3d/templates/default.json'
 import { blueprintStorage } from '@/services/storage'
-import { exportPlanToPdf } from '@/services/pdf-export'
+import { buildPlanPdfDoc, planPdfFileName, type PlanExportData } from '@/services/pdf-export'
 
 import { Blueprint3d } from '@blueprint3d/blueprint3d'
 import { floorplannerModes } from '@blueprint3d/floorplanner/floorplanner_view'
@@ -60,6 +61,7 @@ export function Blueprint3DAppBase({ config = {} }: Blueprint3DAppBaseProps) {
   } = config
 
   const t = useTranslations('BluePrint.saveDialog')
+  const tDownload = useTranslations('BluePrint.downloadDialog')
   const tItems = useTranslations('BluePrint.items')
   const tFloorplanner = useTranslations('BluePrint.floorplanner')
   const tMyFloorplans = useTranslations('BluePrint.myFloorplans')
@@ -81,6 +83,7 @@ export function Blueprint3DAppBase({ config = {} }: Blueprint3DAppBaseProps) {
   const [itemsLoading, setItemsLoading] = useState(0)
   const [viewMode, setViewMode] = useState<'2d' | '3d'>('3d')
   const [saveDialogOpen, setSaveDialogOpen] = useState(false)
+  const [downloadDialogOpen, setDownloadDialogOpen] = useState(false)
 
   const [currentBlueprint, setCurrentBlueprint] = useState<{
     id: string
@@ -378,8 +381,8 @@ export function Blueprint3DAppBase({ config = {} }: Blueprint3DAppBaseProps) {
     }
   }, [currentBlueprint, generateTopDownThumbnail, t])
 
-  const handleDownloadPlan = useCallback(() => {
-    if (!blueprint3dRef.current) return
+  const buildPlanExportData = useCallback((): PlanExportData | null => {
+    if (!blueprint3dRef.current) return null
     const bp = blueprint3dRef.current
 
     const itemCounts = new Map<string, number>()
@@ -391,15 +394,59 @@ export function Blueprint3DAppBase({ config = {} }: Blueprint3DAppBaseProps) {
 
     const size = bp.model.floorplan.getSize()
 
-    exportPlanToPdf({
+    return {
       projectName: currentBlueprint?.name || 'Floorplan',
       thumbnailDataUrl: generateTopDownThumbnail(),
       roomCount: bp.model.floorplan.getRooms().length,
       floorSizeText: `${Dimensioning.cmToMeasure(size.x)} x ${Dimensioning.cmToMeasure(size.z)}`,
       totalItemCount: items.length,
       items: Array.from(itemCounts.entries()).map(([name, quantity]) => ({ name, quantity }))
-    })
+    }
   }, [currentBlueprint, generateTopDownThumbnail])
+
+  const handleDownloadPlan = useCallback(() => {
+    setDownloadDialogOpen(true)
+  }, [])
+
+  const handleDownloadPlanSubmit = useCallback(
+    async (formData: DownloadPlanFormData) => {
+      const planData = buildPlanExportData()
+      if (!planData) return
+
+      // Give the user their plan immediately.
+      const doc = buildPlanPdfDoc(planData)
+      const fileName = planPdfFileName(planData)
+      doc.save(fileName)
+
+      // Notify the site owner by email with the lead info and the same plan.
+      try {
+        const pdfBase64 = doc.output('datauristring').split(',')[1] ?? ''
+        const response = await fetch('/api/send-plan-lead', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            name: formData.name,
+            email: formData.email,
+            phone: formData.phone,
+            message: formData.message,
+            planName: planData.projectName,
+            roomCount: planData.roomCount,
+            floorSizeText: planData.floorSizeText,
+            totalItemCount: planData.totalItemCount,
+            items: planData.items,
+            pdfBase64,
+            pdfFileName: fileName
+          })
+        })
+        if (!response.ok) throw new Error('Request failed')
+        toast.success(tDownload('success'))
+      } catch (error) {
+        console.error('Failed to send plan lead email:', error)
+        toast.error(tDownload('error'))
+      }
+    },
+    [buildPlanExportData, tDownload]
+  )
 
   const handleNew = useCallback(() => {
     setSaveDialogOpen(true)
@@ -720,6 +767,13 @@ export function Blueprint3DAppBase({ config = {} }: Blueprint3DAppBaseProps) {
             ? (currentMode as RoomType)
             : RoomType.BEDROOM
         }
+      />
+
+      {/* Download Plan Lead Capture Dialog */}
+      <DownloadPlanDialog
+        open={downloadDialogOpen}
+        onOpenChange={setDownloadDialogOpen}
+        onSubmit={handleDownloadPlanSubmit}
       />
     </div>
   )

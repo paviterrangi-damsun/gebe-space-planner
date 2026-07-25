@@ -243,6 +243,25 @@
       "roomTypeLabel": "Room Type",
       "openSidebar": "Open sidebar"
     },
+    "downloadDialog": {
+      "title": "Download Your Plan",
+      "description": "Enter your details to download your floor plan. We'll also send you a copy by email.",
+      "nameLabel": "Name",
+      "namePlaceholder": "Your full name",
+      "nameRequired": "Please enter your name.",
+      "emailLabel": "Email",
+      "emailPlaceholder": "you@example.com",
+      "emailInvalid": "Please enter a valid email address.",
+      "phoneLabel": "Phone Number",
+      "phonePlaceholder": "Your phone number",
+      "messageLabel": "Message",
+      "messagePlaceholder": "Any notes or requests (optional)",
+      "cancel": "Cancel",
+      "submit": "Download Plan",
+      "submitting": "Submitting...",
+      "success": "Plan downloaded! We received your details.",
+      "error": "Plan downloaded, but we could not send your details. Please try again."
+    },
     "bedSizeInput": {
       "title": "Bed Size",
       "bedDimensions": "Bed Dimensions",
