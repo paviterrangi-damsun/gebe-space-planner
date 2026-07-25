@@ -256,6 +256,7 @@
       "phonePlaceholder": "您的電話號碼",
       "messageLabel": "留言",
       "messagePlaceholder": "其他備註或需求（選填）",
+      "noItemsError": "請先為您的平面圖選擇至少一件產品，再進行下載。",
       "cancel": "取消",
       "submit": "下載平面圖",
       "submitting": "提交中...",

@@ -256,6 +256,7 @@
       "phonePlaceholder": "Your phone number",
       "messageLabel": "Message",
       "messagePlaceholder": "Any notes or requests (optional)",
+      "noItemsError": "Please select at least one product for your floor plan before downloading.",
       "cancel": "Cancel",
       "submit": "Download Plan",
       "submitting": "Submitting...",

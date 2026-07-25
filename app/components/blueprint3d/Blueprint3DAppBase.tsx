@@ -84,6 +84,7 @@ export function Blueprint3DAppBase({ config = {} }: Blueprint3DAppBaseProps) {
   const [viewMode, setViewMode] = useState<'2d' | '3d'>('3d')
   const [saveDialogOpen, setSaveDialogOpen] = useState(false)
   const [downloadDialogOpen, setDownloadDialogOpen] = useState(false)
+  const [downloadPlanItemCount, setDownloadPlanItemCount] = useState(0)
 
   const [currentBlueprint, setCurrentBlueprint] = useState<{
     id: string
@@ -405,8 +406,10 @@ export function Blueprint3DAppBase({ config = {} }: Blueprint3DAppBaseProps) {
   }, [currentBlueprint, generateTopDownThumbnail])
 
   const handleDownloadPlan = useCallback(() => {
+    const planData = buildPlanExportData()
+    setDownloadPlanItemCount(planData?.totalItemCount ?? 0)
     setDownloadDialogOpen(true)
-  }, [])
+  }, [buildPlanExportData])
 
   const handleDownloadPlanSubmit = useCallback(
     async (formData: DownloadPlanFormData) => {
@@ -687,7 +690,7 @@ export function Blueprint3DAppBase({ config = {} }: Blueprint3DAppBaseProps) {
             className="absolute inset-0"
             style={{ display: viewMode === '2d' ? 'block' : 'none' }}
           >
-            <canvas id="floorplanner-canvas" ref={floorplannerCanvasRef}></canvas>
+            <canvas id="floorplanner-canvas" ref={floorplannerCanvasRef} style={{ backgroundColor: '#EDEDEC' }}></canvas>
             {viewMode === '2d' && !isFullscreen && (
               <>
                 <FloorplannerControls
@@ -774,6 +777,7 @@ export function Blueprint3DAppBase({ config = {} }: Blueprint3DAppBaseProps) {
         open={downloadDialogOpen}
         onOpenChange={setDownloadDialogOpen}
         onSubmit={handleDownloadPlanSubmit}
+        itemCount={downloadPlanItemCount}
       />
     </div>
   )

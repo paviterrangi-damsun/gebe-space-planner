@@ -26,6 +26,7 @@ interface DownloadPlanDialogProps {
   open: boolean
   onOpenChange: (open: boolean) => void
   onSubmit: (data: DownloadPlanFormData) => Promise<void>
+  itemCount: number
 }
 
 const EMPTY_FORM: DownloadPlanFormData = { name: '', email: '', phone: '', message: '' }
@@ -34,7 +35,7 @@ function isValidEmail(value: string): boolean {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)
 }
 
-export function DownloadPlanDialog({ open, onOpenChange, onSubmit }: DownloadPlanDialogProps) {
+export function DownloadPlanDialog({ open, onOpenChange, onSubmit, itemCount }: DownloadPlanDialogProps) {
   const t = useTranslations('BluePrint.downloadDialog')
   const [form, setForm] = useState<DownloadPlanFormData>(EMPTY_FORM)
   const [submitting, setSubmitting] = useState(false)
@@ -50,7 +51,8 @@ export function DownloadPlanDialog({ open, onOpenChange, onSubmit }: DownloadPla
 
   const nameValid = form.name.trim().length > 0
   const emailValid = isValidEmail(form.email.trim())
-  const formValid = nameValid && emailValid
+  const hasItems = itemCount > 0
+  const formValid = nameValid && emailValid && hasItems
 
   const handleChange = (field: keyof DownloadPlanFormData) => (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -126,6 +128,9 @@ export function DownloadPlanDialog({ open, onOpenChange, onSubmit }: DownloadPla
               rows={3}
             />
           </div>
+          {touched && !hasItems && (
+            <p className="text-sm text-destructive">{t('noItemsError')}</p>
+          )}
         </div>
         <DialogFooter>
           <Button variant="secondary" onClick={() => onOpenChange(false)} disabled={submitting}>
