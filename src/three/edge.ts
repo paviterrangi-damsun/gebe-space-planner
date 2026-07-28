@@ -129,7 +129,7 @@ export class Edge {
     const cb =
       callback ||
       (() => {
-        ;(this.scene as any).needsUpdate = true
+        this.controls.needsUpdate = true
       })
     const textureData = this.edge.getTexture()
     const stretch = textureData.stretch

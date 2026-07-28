@@ -313,6 +313,81 @@ export class Utils {
     return tIntersects % 2 == 1
   }
 
+  /** Shoelace polygon area (always positive, regardless of winding). */
+  static polygonArea(points: Point[]): number {
+    let sum = 0
+    for (let i = 0; i < points.length; i++) {
+      const p1 = points[i]
+      const p2 = points[(i + 1) % points.length]
+      sum += p1.x * p2.y - p2.x * p1.y
+    }
+    return Math.abs(sum) / 2
+  }
+
+  /** Area-weighted polygon centroid. Note: for concave polygons this can fall outside the shape. */
+  static polygonCentroid(points: Point[]): Point {
+    let signedArea = 0
+    let cx = 0
+    let cy = 0
+    for (let i = 0; i < points.length; i++) {
+      const p1 = points[i]
+      const p2 = points[(i + 1) % points.length]
+      const cross = p1.x * p2.y - p2.x * p1.y
+      signedArea += cross
+      cx += (p1.x + p2.x) * cross
+      cy += (p1.y + p2.y) * cross
+    }
+    if (signedArea === 0) {
+      // Degenerate polygon (zero area / collinear points): fall back to the vertex average.
+      const avg = points.reduce((acc, p) => ({ x: acc.x + p.x, y: acc.y + p.y }), { x: 0, y: 0 })
+      return { x: avg.x / points.length, y: avg.y / points.length }
+    }
+    signedArea = signedArea / 2
+    return { x: cx / (6 * signedArea), y: cy / (6 * signedArea) }
+  }
+
+  /**
+   * Finds a point guaranteed to lie inside a simple polygon. Prefers the area
+   * centroid; falls back to a grid search for concave shapes (L/U/Z/S/T...)
+   * where the centroid itself can land outside the polygon, e.g. in a notch.
+   */
+  static findPointInPolygon(points: Point[]): Point {
+    if (points.length === 0) return { x: 0, y: 0 }
+
+    const centroid = Utils.polygonCentroid(points)
+    if (points.length < 3 || Utils.pointInPolygon(centroid.x, centroid.y, points)) {
+      return centroid
+    }
+
+    let minX = Infinity
+    let maxX = -Infinity
+    let minY = Infinity
+    let maxY = -Infinity
+    points.forEach((p) => {
+      minX = Math.min(minX, p.x)
+      maxX = Math.max(maxX, p.x)
+      minY = Math.min(minY, p.y)
+      maxY = Math.max(maxY, p.y)
+    })
+
+    const step = Math.max(maxX - minX, maxY - minY) / 40 || 1
+    let best: Point | null = null
+    let bestDistSq = Infinity
+    for (let x = minX; x <= maxX; x += step) {
+      for (let y = minY; y <= maxY; y += step) {
+        if (Utils.pointInPolygon(x, y, points)) {
+          const distSq = (x - centroid.x) ** 2 + (y - centroid.y) ** 2
+          if (distSq < bestDistSq) {
+            bestDistSq = distSq
+            best = { x, y }
+          }
+        }
+      }
+    }
+
+    return best || centroid
+  }
+
   /** Checks if all corners of insideCorners are inside the polygon described by outsideCorners */
   static polygonInsidePolygon(
     insideCorners: Point[],

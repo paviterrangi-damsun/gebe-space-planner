@@ -1,18 +1,21 @@
 import * as THREE from 'three'
 import type { Room } from '../model/room'
+import type { Controls } from './controls'
 
 export class Floor {
   public readonly room: Room
   private readonly scene: THREE.Scene
   private readonly renderer: THREE.WebGLRenderer
+  private readonly controls: Controls
   private floorPlane: THREE.Mesh | null = null
   // @ts-ignore - roofPlane is declared but not used, keeping for future use
   private roofPlane: THREE.Mesh | null = null
 
-  constructor(scene: THREE.Scene, room: Room, renderer: THREE.WebGLRenderer) {
+  constructor(scene: THREE.Scene, room: Room, renderer: THREE.WebGLRenderer, controls: Controls) {
     this.scene = scene
     this.room = room
     this.renderer = renderer
+    this.controls = controls
     this.init()
   }
 
@@ -33,7 +36,12 @@ export class Floor {
     const textureSettings = this.room.getTexture()
     // setup texture
     const textureLoader = new THREE.TextureLoader()
-    const floorTexture = textureLoader.load(textureSettings.url)
+    // The render loop only redraws on demand, and texture decoding is async,
+    // so without this callback a new floor texture/color stays invisible
+    // until the next camera interaction.
+    const floorTexture = textureLoader.load(textureSettings.url, () => {
+      this.controls.needsUpdate = true
+    })
     floorTexture.wrapS = THREE.RepeatWrapping
     floorTexture.wrapT = THREE.RepeatWrapping
     floorTexture.repeat.set(1, 1)

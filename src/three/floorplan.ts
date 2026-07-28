@@ -35,7 +35,7 @@ export class FloorplanThree {
 
     // draw floors
     this.floorplan.getRooms().forEach((room) => {
-      const threeFloor = new Floor(this.scene, room, this.renderer)
+      const threeFloor = new Floor(this.scene, room, this.renderer, this.controls)
       this.floors.push(threeFloor)
       threeFloor.addToScene()
     })

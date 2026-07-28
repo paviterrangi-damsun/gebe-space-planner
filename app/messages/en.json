@@ -30,7 +30,17 @@
     },
     "textureSelector": {
       "adjustFloor": "Adjust Floor",
-      "adjustWall": "Adjust Wall"
+      "adjustWall": "Adjust Wall",
+      "materials": "Materials",
+      "colors": "Colors",
+      "customColor": "Custom color",
+      "upload": "Upload",
+      "uploadHint": "Click to upload your own floor image",
+      "uploadHintWall": "Click to upload your own wall image",
+      "uploading": "Applying your image...",
+      "uploadInvalidType": "Please choose an image file.",
+      "uploadTooLarge": "Image must be smaller than 10MB.",
+      "uploadError": "Couldn't apply that image. Please try another one."
     },
     "myFloorplans": {
       "title": "My Saved Floorplans",
@@ -105,7 +115,8 @@
       "list": {
         "itemCount": "{count} {count, plural, =1 {item} other {items}}",
         "noItemsFound": "No items found",
-        "selectDifferentLayer": "Try selecting a different category"
+        "selectDifferentLayer": "Try selecting a different category",
+        "shownForShape": "Showing products for your {shape} room"
       },
       "categories": {
         "all": "All",
@@ -262,6 +273,24 @@
       "submitting": "Submitting...",
       "success": "Plan downloaded! We received your details.",
       "error": "Plan downloaded, but we could not send your details. Please try again."
+    },
+    "shapeSelector": {
+      "title": "Choose Your Room Shape",
+      "description": "Pick a shape to start your floor plan. You can adjust the walls afterward.",
+      "skip": "Skip, start with a blank rectangle",
+      "shapes": {
+        "square": "Square",
+        "rectangle": "Rectangle",
+        "l-shape": "L Shape",
+        "corner": "Corner",
+        "blunt-corner": "Blunt Corner",
+        "t-shape": "T Shape",
+        "u-shape": "U Shape",
+        "z-shape": "Z Shape",
+        "s-shape": "S Shape",
+        "triangle": "Triangle",
+        "circle": "Circle"
+      }
     },
     "bedSizeInput": {
       "title": "Bed Size",

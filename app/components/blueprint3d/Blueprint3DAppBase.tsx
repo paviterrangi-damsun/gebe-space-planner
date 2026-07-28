@@ -14,6 +14,8 @@ import { FloorplannerControls } from './FloorplannerControls'
 import { TextureSelector } from './TextureSelector'
 import { SaveFloorplanDialog } from './SaveFloorplanDialog'
 import { DownloadPlanDialog, type DownloadPlanFormData } from './DownloadPlanDialog'
+import { ShapeSelectorDialog } from './ShapeSelectorDialog'
+import { buildShapeTemplate, type RoomShape } from '@/lib/shape-templates'
 import { TouchHelp } from './TouchHelp'
 import { ControlsHelp } from './ControlsHelp'
 import DefaultFloorplan from '@blueprint3d/templates/default.json'
@@ -85,6 +87,8 @@ export function Blueprint3DAppBase({ config = {} }: Blueprint3DAppBaseProps) {
   const [saveDialogOpen, setSaveDialogOpen] = useState(false)
   const [downloadDialogOpen, setDownloadDialogOpen] = useState(false)
   const [downloadPlanItemCount, setDownloadPlanItemCount] = useState(0)
+  const [shapeSelectorOpen, setShapeSelectorOpen] = useState(false)
+  const [currentRoomShape, setCurrentRoomShape] = useState<RoomShape | null>(null)
 
   const [currentBlueprint, setCurrentBlueprint] = useState<{
     id: string
@@ -184,6 +188,11 @@ export function Blueprint3DAppBase({ config = {} }: Blueprint3DAppBaseProps) {
           blueprint3d.model.loadSerialized(JSON.stringify(savedTemplate))
           return
         }
+
+        // SHAPE SELECTOR (disabled for now, see other commented blocks below to re-enable):
+        // No saved plan yet: let the user pick a starting shape instead of
+        // silently loading the default rectangle.
+        // setShapeSelectorOpen(true)
 
         const { getModeConfig } = await import('@blueprint3d/config/modes')
         const modeConfig = getModeConfig(mode)
@@ -405,6 +414,22 @@ export function Blueprint3DAppBase({ config = {} }: Blueprint3DAppBaseProps) {
     }
   }, [currentBlueprint, generateTopDownThumbnail])
 
+  const handleShapeSelect = useCallback((shape: RoomShape) => {
+    if (!blueprint3dRef.current) return
+    const template = buildShapeTemplate(shape)
+    blueprint3dRef.current.model.loadSerialized(JSON.stringify(template))
+    setCurrentRoomShape(shape)
+    setShapeSelectorOpen(false)
+  }, [])
+
+  const handleSkipShapeSelector = useCallback(() => {
+    if (blueprint3dRef.current) {
+      blueprint3dRef.current.model.loadSerialized(JSON.stringify(DefaultFloorplan))
+    }
+    setCurrentRoomShape('rectangle')
+    setShapeSelectorOpen(false)
+  }, [])
+
   const handleDownloadPlan = useCallback(() => {
     const planData = buildPlanExportData()
     setDownloadPlanItemCount(planData?.totalItemCount ?? 0)
@@ -485,6 +510,8 @@ export function Blueprint3DAppBase({ config = {} }: Blueprint3DAppBaseProps) {
     (data: string, loadedMode?: RoomType, blueprintId?: string, blueprintName?: string) => {
       if (!blueprint3dRef.current) return
       blueprint3dRef.current.model.loadSerialized(data)
+      // The saved plan's original shape isn't tracked, so stop filtering items by shape.
+      setCurrentRoomShape(null)
       if (loadedMode) setCurrentMode(loadedMode as Blueprint3DMode)
       if (blueprintId && blueprintName) {
         setCurrentBlueprint({
@@ -750,6 +777,7 @@ export function Blueprint3DAppBase({ config = {} }: Blueprint3DAppBaseProps) {
         isOpen={activeTab === 'items'}
         onClose={() => setActiveTab('edit')}
         onItemSelect={handleItemSelect}
+        roomShape={currentRoomShape}
       />
 
       {/* Settings Dialog */}
@@ -779,6 +807,14 @@ export function Blueprint3DAppBase({ config = {} }: Blueprint3DAppBaseProps) {
         onSubmit={handleDownloadPlanSubmit}
         itemCount={downloadPlanItemCount}
       />
+
+      {/* Room Shape Selector (disabled for now — uncomment to re-enable)
+      <ShapeSelectorDialog
+        open={shapeSelectorOpen}
+        onSelect={handleShapeSelect}
+        onSkip={handleSkipShapeSelector}
+      />
+      */}
     </div>
   )
 }

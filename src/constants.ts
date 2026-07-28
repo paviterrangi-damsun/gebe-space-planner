@@ -13,6 +13,23 @@ export type ItemCategory =
   | 'door'
   | 'window'
 
+// Room floor shapes (must match app/lib/shape-templates.ts's ROOM_SHAPES)
+export const ROOM_SHAPES = [
+  'square',
+  'rectangle',
+  'l-shape',
+  'corner',
+  'blunt-corner',
+  't-shape',
+  'u-shape',
+  'z-shape',
+  's-shape',
+  'triangle',
+  'circle'
+] as const
+
+export type RoomShape = (typeof ROOM_SHAPES)[number]
+
 export interface Item {
   key: string
   name: string
@@ -23,6 +40,15 @@ export interface Item {
   description?: string
   /** Corrective scale applied on placement, for models not authored in meters. */
   scale?: { x: number; y: number; z: number }
+  /** Room shapes this product suits. Omit to show it for every shape. */
+  shapes?: RoomShape[]
+}
+
+/** True if an item should be shown for the given room shape (untagged items suit every shape). */
+export function itemSuitsShape(item: Item, shape: RoomShape | null): boolean {
+  if (!item.shapes || item.shapes.length === 0) return true
+  if (!shape) return true
+  return item.shapes.includes(shape)
 }
 
 // Items data
@@ -41,38 +67,3 @@ export const ITEMS: Item[] = [
   }
 ]
 
-// Floor textures
-export const FLOOR_TEXTURES = [
-  {
-    name: 'Light Fine Wood',
-    thumbnail: 'https://cdn-images.archybase.com/archybase/blueprint3d/covers/thumbnail_light_fine_wood.jpg',
-    url: 'https://cdn-images.archybase.com/archybase/blueprint3d/covers/light_fine_wood.jpg',
-    stretch: false,
-    scale: 300
-  }
-]
-
-// Wall textures
-export const WALL_TEXTURES = [
-  {
-    name: 'Marble Tiles',
-    thumbnail: 'https://cdn-images.archybase.com/archybase/blueprint3d/covers/thumbnail_marbletiles.jpg',
-    url: 'https://cdn-images.archybase.com/archybase/blueprint3d/covers/marbletiles.jpg',
-    stretch: false,
-    scale: 300
-  },
-  {
-    name: 'Wallmap Yellow',
-    thumbnail: 'https://cdn-images.archybase.com/archybase/blueprint3d/covers/thumbnail_wallmap_yellow.png',
-    url: 'https://cdn-images.archybase.com/archybase/blueprint3d/covers/wallmap_yellow.png',
-    stretch: true,
-    scale: 0
-  },
-  {
-    name: 'Light Brick',
-    thumbnail: 'https://cdn-images.archybase.com/archybase/blueprint3d/covers/thumbnail_light_brick.jpg',
-    url: 'https://cdn-images.archybase.com/archybase/blueprint3d/covers/light_brick.jpg',
-    stretch: false,
-    scale: 100
-  }
-]

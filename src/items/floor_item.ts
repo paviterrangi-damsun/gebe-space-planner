@@ -28,11 +28,41 @@ export abstract class FloorItem extends Item {
   /** */
   public placeInRoom() {
     if (!this.position_set) {
-      const center = this.model.floorplan.getCenter()
-      this.position.x = center.x
-      this.position.z = center.z
+      const point = this.findFloorPlacementPoint()
+      this.position.x = point.x
+      this.position.z = point.y
       this.position.y = this.halfSize.y
     }
+  }
+
+  /**
+   * Picks a spawn point guaranteed to sit on the floor. The floorplan's
+   * bounding-box center (the previous behavior) can fall outside the actual
+   * floor surface for concave shapes like L/U/Z/S/T, so this instead finds
+   * an interior point of the largest room's own polygon.
+   */
+  private findFloorPlacementPoint(): { x: number; y: number } {
+    const rooms = this.model.floorplan.getRooms()
+
+    let largestRoomCorners: { x: number; y: number }[] | null = null
+    let largestArea = -1
+    rooms.forEach((room) => {
+      if (room.interiorCorners.length < 3) return
+      const area = Utils.polygonArea(room.interiorCorners)
+      if (area > largestArea) {
+        largestArea = area
+        largestRoomCorners = room.interiorCorners
+      }
+    })
+
+    if (largestRoomCorners) {
+      return Utils.findPointInPolygon(largestRoomCorners)
+    }
+
+    // No enclosed room yet (e.g. walls don't form a closed loop): fall back
+    // to the floorplan's bounding-box center.
+    const center = this.model.floorplan.getCenter()
+    return { x: center.x, y: center.z }
   }
 
   /** Take action after a resize */

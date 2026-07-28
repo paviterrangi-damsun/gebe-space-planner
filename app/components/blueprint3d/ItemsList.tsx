@@ -2,7 +2,8 @@
 
 import { useState, useMemo } from 'react'
 import Image from 'next/image'
-import { ITEMS, type ItemCategory } from '@blueprint3d/constants'
+import { ITEMS, itemSuitsShape, type ItemCategory } from '@blueprint3d/constants'
+import type { RoomShape } from '@/lib/shape-templates'
 import { useTranslations } from 'next-intl'
 import { Button } from "@/components/ui/button"
 
@@ -14,6 +15,7 @@ interface ItemsListProps {
     type: string
     scale?: { x: number; y: number; z: number }
   }) => void
+  roomShape: RoomShape | null
 }
 
 const CATEGORY_KEYS = {
@@ -23,8 +25,9 @@ const CATEGORY_KEYS = {
 
 const CATEGORY_VALUES: Array<'all' | 'chair'> = ['all', 'chair']
 
-export function ItemsList({ onItemSelect }: ItemsListProps) {
+export function ItemsList({ onItemSelect, roomShape }: ItemsListProps) {
   const t = useTranslations('BluePrint.items')
+  const tShapes = useTranslations('BluePrint.shapeSelector.shapes')
 
   const [selectedCategory, setSelectedCategory] = useState<ItemCategory | 'all'>('all')
 
@@ -36,20 +39,28 @@ export function ItemsList({ onItemSelect }: ItemsListProps) {
     }))
   }, [t])
 
-  // Filter items based on selected category
+  // Filter items based on selected category and the current room's shape
   const filteredItems = useMemo(() => {
     let items = ITEMS
 
-    // Apply category filter
     if (selectedCategory !== 'all') {
       items = items.filter((item) => item.category === selectedCategory)
     }
 
+    items = items.filter((item) => itemSuitsShape(item, roomShape))
+
     return items
-  }, [selectedCategory])
+  }, [selectedCategory, roomShape])
 
   return (
     <div className="space-y-4 sm:space-y-6">
+      {/* Current shape indicator */}
+      {roomShape && (
+        <p className="text-xs text-muted-foreground">
+          {t('list.shownForShape', { shape: tShapes(roomShape) })}
+        </p>
+      )}
+
       {/* Category Filter */}
       <div className="flex flex-wrap gap-2">
         {categories.map((category) => (
