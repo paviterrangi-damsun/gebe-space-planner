@@ -189,14 +189,9 @@ export function Blueprint3DAppBase({ config = {} }: Blueprint3DAppBaseProps) {
           return
         }
 
-        // SHAPE SELECTOR (disabled for now, see other commented blocks below to re-enable):
         // No saved plan yet: let the user pick a starting shape instead of
         // silently loading the default rectangle.
-        // setShapeSelectorOpen(true)
-
-        const { getModeConfig } = await import('@blueprint3d/config/modes')
-        const modeConfig = getModeConfig(mode)
-        blueprint3d.model.loadSerialized(JSON.stringify(modeConfig.defaultTemplate))
+        setShapeSelectorOpen(true)
       } catch (error) {
         console.error('[Blueprint3DAppBase] Error loading template:', error)
         blueprint3d.model.loadSerialized(JSON.stringify(DefaultFloorplan))
@@ -208,7 +203,7 @@ export function Blueprint3DAppBase({ config = {} }: Blueprint3DAppBaseProps) {
     return () => {
       // Cleanup if needed
     }
-  }, [getWheelZoomEnabled, tItems, mode, onBlueprint3DReady])
+  }, [getWheelZoomEnabled, tItems, onBlueprint3DReady])
 
   // Update wheel zoom setting when it changes
   useEffect(() => {
@@ -808,13 +803,12 @@ export function Blueprint3DAppBase({ config = {} }: Blueprint3DAppBaseProps) {
         itemCount={downloadPlanItemCount}
       />
 
-      {/* Room Shape Selector (disabled for now — uncomment to re-enable)
+      {/* Room Shape Selector (auto-opens for a fresh plan) */}
       <ShapeSelectorDialog
         open={shapeSelectorOpen}
         onSelect={handleShapeSelect}
         onSkip={handleSkipShapeSelector}
       />
-      */}
     </div>
   )
 }
