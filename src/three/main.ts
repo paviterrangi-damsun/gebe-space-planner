@@ -149,7 +149,7 @@ export class Main {
 
   /** Flat canvas background color (top and bottom of the skybox gradient are the same). */
   private getSkyboxColors(): { topColor: number; bottomColor: number } {
-    const canvasBackgroundColor = 0xEDEDEC
+    const canvasBackgroundColor = 0xFFFFFF
     return { topColor: canvasBackgroundColor, bottomColor: canvasBackgroundColor }
   }
 

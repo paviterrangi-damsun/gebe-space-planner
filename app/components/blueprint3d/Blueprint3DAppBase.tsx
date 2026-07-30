@@ -62,6 +62,7 @@ export function Blueprint3DAppBase({ config = {} }: Blueprint3DAppBaseProps) {
     alwaysSpin = false
   } = config
 
+  const tApp = useTranslations('BluePrint')
   const t = useTranslations('BluePrint.saveDialog')
   const tDownload = useTranslations('BluePrint.downloadDialog')
   const tItems = useTranslations('BluePrint.items')
@@ -633,10 +634,13 @@ export function Blueprint3DAppBase({ config = {} }: Blueprint3DAppBaseProps) {
   )
 
   return (
-    <div className="relative h-full w-full">
+    <div className="relative h-full w-full flex flex-col">
       {/* Top Navigation Bar */}
       {!isFullscreen && (
-        <div className="absolute top-0 left-0 right-0 z-50">
+        <div className="relative z-50 flex-shrink-0">
+          <div className="w-full text-center pt-5 mb-5">
+            <span style={{fontSize:'30px'}} className="font-normal text-foreground/80">{tApp('appTitle')}</span>
+          </div>
           <TopNavBar
             activeTab={activeTab}
             onTabChange={handleTabChange}
@@ -652,7 +656,7 @@ export function Blueprint3DAppBase({ config = {} }: Blueprint3DAppBaseProps) {
       )}
 
       {/* Main Content Area */}
-      <div ref={contentRef} className="h-full w-full relative overflow-hidden">
+      <div ref={contentRef} className="flex-1 w-full relative overflow-hidden">
         <TouchHelp />
 
         {/* Projects View */}
@@ -712,7 +716,7 @@ export function Blueprint3DAppBase({ config = {} }: Blueprint3DAppBaseProps) {
             className="absolute inset-0"
             style={{ display: viewMode === '2d' ? 'block' : 'none' }}
           >
-            <canvas id="floorplanner-canvas" ref={floorplannerCanvasRef} style={{ backgroundColor: '#EDEDEC' }}></canvas>
+            <canvas id="floorplanner-canvas" ref={floorplannerCanvasRef} style={{ backgroundColor: '#FFFFFF' }}></canvas>
             {viewMode === '2d' && !isFullscreen && (
               <>
                 <FloorplannerControls

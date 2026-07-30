@@ -1,5 +1,6 @@
 {
   "BluePrint": {
+    "appTitle": "3D Outdoor Furniture Planner",
     "sidebar": {
       "editFloorplan": "Edit Floorplan",
       "design": "Design",

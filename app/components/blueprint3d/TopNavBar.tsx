@@ -40,15 +40,17 @@ export function TopNavBar({
     { id: 'items' as const, label: t('addItems') }
   ]
 
+  // Tabs and tools share this visibility rule: hidden while drawing the 2D floorplan.
+  const showSideSections = !(activeTab === 'edit' && viewMode === '2d')
+
   return (
-    <div className={cn('bg-transparent relative pointer-events-none', isMobile ? 'h-12' : 'h-14')}>
-      {/* Left: Tabs - Hidden in 2D mode */}
-      {!(activeTab === 'edit' && viewMode === '2d') && (
-        <div className={cn(
-          'absolute top-0 flex items-center pointer-events-auto',
-          isMobile ? 'left-2 h-12 gap-0.5' : 'left-4 h-14 gap-1'
-        )}>
-          {tabs.map((tab) => (
+    <div className={cn('bg-transparent flex items-center', isMobile ? 'h-12' : 'h-14')}>
+      {/* Left: Tabs - Hidden in 2D mode. Kept as an equal-width flex column
+          (matched by the right column) so the center switch stays centered
+          regardless of which side sections are shown. */}
+      <div className={cn('flex-1 flex items-center', isMobile ? 'pl-2 gap-0.5' : 'pl-4 gap-1')}>
+        {showSideSections &&
+          tabs.map((tab) => (
             <button
               key={tab.id}
               onClick={() => onTabChange(tab.id)}
@@ -63,12 +65,11 @@ export function TopNavBar({
               {tab.label}
             </button>
           ))}
-        </div>
-      )}
+      </div>
 
-      {/* Center: 2D/3D Switch - Absolutely centered */}
-      {activeTab === 'edit' && (
-        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-auto z-[100]">
+      {/* Center: 2D/3D Switch */}
+      <div className="flex-shrink-0 flex items-center justify-center">
+        {activeTab === 'edit' && (
           <div className={cn(
             'flex items-center bg-background/50 backdrop-blur-sm rounded-full border border-border/50',
             isMobile ? 'gap-2 px-3 py-1.5' : 'gap-3 px-4 py-2'
@@ -93,59 +94,58 @@ export function TopNavBar({
               3D
             </span>
           </div>
-        </div>
-      )}
+        )}
+      </div>
 
       {/* Right: Tools - Hidden in 2D mode */}
-      {!(activeTab === 'edit' && viewMode === '2d') && (
-        <div className={cn(
-          'absolute top-0 flex items-center pointer-events-auto',
-          isMobile ? 'right-2 h-12 gap-1' : 'right-4 h-14 gap-2'
-        )}>
-          {/* New Button */}
-          <Button
-            onClick={onNew}
-            variant="outline"
-            size={isMobile ? 'sm' : 'sm'}
-            className={cn(isMobile && 'h-8 px-3 text-xs')}
-          >
-            <FilePlus className={cn('h-4 w-4', !isMobile && 'mr-1.5')} />
-            {!isMobile && tMain('newPlan')}
-          </Button>
+      <div className={cn('flex-1 flex items-center justify-end', isMobile ? 'pr-2 gap-1' : 'pr-4 gap-2')}>
+        {showSideSections && (
+          <>
+            {/* New Button */}
+            <Button
+              onClick={onNew}
+              variant="outline"
+              size={isMobile ? 'sm' : 'sm'}
+              className={cn(isMobile && 'h-8 px-3 text-xs')}
+            >
+              <FilePlus className={cn('h-4 w-4', !isMobile && 'mr-1.5')} />
+              {!isMobile && tMain('newPlan')}
+            </Button>
 
-          {/* Save Button */}
-          <Button
-            onClick={onSave}
-            variant="default"
-            size={isMobile ? 'sm' : 'sm'}
-            className={cn(isMobile && 'h-8 px-3 text-xs')}
-          >
-            {tMain('savePlan')}
-          </Button>
+            {/* Save Button */}
+            <Button
+              onClick={onSave}
+              variant="default"
+              size={isMobile ? 'sm' : 'sm'}
+              className={cn(isMobile && 'h-8 px-3 text-xs')}
+            >
+              {tMain('savePlan')}
+            </Button>
 
-          {/* Download Plan (PDF) Button */}
-          <Button
-            onClick={onDownload}
-            variant="outline"
-            size={isMobile ? 'sm' : 'sm'}
-            className={cn(isMobile && 'h-8 px-3 text-xs')}
-          >
-            <Download className={cn('h-4 w-4', !isMobile && 'mr-1.5')} />
-            {!isMobile && tMain('downloadPlan')}
-          </Button>
+            {/* Download Plan (PDF) Button */}
+            <Button
+              onClick={onDownload}
+              variant="outline"
+              size={isMobile ? 'sm' : 'sm'}
+              className={cn(isMobile && 'h-8 px-3 text-xs')}
+            >
+              <Download className={cn('h-4 w-4', !isMobile && 'mr-1.5')} />
+              {!isMobile && tMain('downloadPlan')}
+            </Button>
 
-          {/* Settings Button */}
-          <Button
-            onClick={onSettingsClick}
-            variant="outline"
-            size="icon"
-            className={cn(isMobile ? 'h-8 w-8' : 'h-9 w-9')}
-            aria-label="Settings"
-          >
-            <Settings className={cn(isMobile ? 'h-3.5 w-3.5' : 'h-4 w-4')} />
-          </Button>
-        </div>
-      )}
+            {/* Settings Button */}
+            <Button
+              onClick={onSettingsClick}
+              variant="outline"
+              size="icon"
+              className={cn(isMobile ? 'h-8 w-8' : 'h-9 w-9')}
+              aria-label="Settings"
+            >
+              <Settings className={cn(isMobile ? 'h-3.5 w-3.5' : 'h-4 w-4')} />
+            </Button>
+          </>
+        )}
+      </div>
     </div>
   )
 }
