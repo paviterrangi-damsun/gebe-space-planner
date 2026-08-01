@@ -38,8 +38,8 @@ export function ShapeSelectorDialog({ open, onSelect, onSkip }: ShapeSelectorDia
   if (!open) return null
 
   return (
-    <div className="fixed inset-0 z-[100] bg-background flex flex-col">
-      <div className="flex-1 overflow-y-auto">
+    <div style={{marginTop:'30px'}} className="fixed inset-0 z-[100] bg-background flex flex-col">
+      <div className="flex-1">
         <div className="w-full max-w-5xl mx-auto px-4 md:px-8 py-10 md:py-16">
           <div className="text-center mb-10">
             <h1 className="text-2xl md:text-3xl font-semibold text-foreground mb-2">

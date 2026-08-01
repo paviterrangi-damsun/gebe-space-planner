@@ -54,16 +54,37 @@ export function itemSuitsShape(item: Item, shape: RoomShape | null): boolean {
 // Items data
 export const ITEMS: Item[] = [
   {
-    key: 'chairOne',
-    name: 'Chair',
-    description: 'Chair',
-    image: '/images/chair-1.png',
-    model: '/models/chair-1.glb',
+    key: 'kawaSingleSeaterSofa',
+    name: 'Kawa Single Seater Sofa',
+    description: 'Kawa Single Seater Sofa',
+    image: '/images/kawa-single-seater-sofa.png',
+    model: '/models/kawa-single-seater-sofa.glb',
     type: '1',
-    category: 'chair',
-    // Model is authored in centimeters; GLBLoader assumes meters and multiplies by 100,
-    // so this counteracts that to render at the model's real-world size.
-    scale: { x: 0.01, y: 0.01, z: 0.01 }
+    category: 'sofa',
+    // Model's authored scale renders ~11x too large otherwise; empirically tuned.
+    scale: { x: 0.1, y: 0.1, z: 0.1 }
+  },
+  {
+    key: 'kawaTwoSeaterSofa',
+    name: 'Kawa Two Seater Sofa',
+    description: 'Kawa Two Seater Sofa',
+    image: '/images/kawa-two-seater-sofa.png',
+    model: '/models/kawa-two-seater-sofa.glb',
+    type: '1',
+    category: 'sofa',
+    // Model's authored scale renders ~11x too large otherwise; empirically tuned.
+    scale: { x: 0.1, y: 0.1, z: 0.1 }
+  },
+  {
+    key: 'kawaThreeSeaterSofa',
+    name: 'Kawa Three Seater Sofa',
+    description: 'Kawa Three Seater Sofa',
+    image: '/images/kawa-three-seater-sofa.png',
+    model: '/models/kawa-three-seater-sofa.glb',
+    type: '1',
+    category: 'sofa',
+    // Model's authored scale renders ~11x too large otherwise; empirically tuned.
+    scale: { x: 0.1, y: 0.1, z: 0.1 }
   }
 ]
 

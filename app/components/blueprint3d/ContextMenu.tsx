@@ -155,7 +155,7 @@ export function ContextMenu({ selectedItem, onDelete, onResize, onFixedChange }:
         </Button>
       </div>
 
-      {/* Size inputs - Compact grid layout */}
+      {/* Size inputs - Compact grid layout (disabled for now — uncomment to re-enable manual width/depth/height editing)
       <div className={cn('mb-3', isMobile ? 'space-y-3' : 'space-y-2')}>
         <div className={cn('grid grid-cols-3 text-xs', isMobile ? 'gap-3' : 'gap-2')}>
           <div>
@@ -193,6 +193,7 @@ export function ContextMenu({ selectedItem, onDelete, onResize, onFixedChange }:
           {getUnitLabel(currentUnit)}
         </p>
       </div>
+      */}
 
       {/* Lock checkbox */}
       <label className={cn(

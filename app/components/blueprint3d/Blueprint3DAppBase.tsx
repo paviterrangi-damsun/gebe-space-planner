@@ -442,30 +442,29 @@ export function Blueprint3DAppBase({ config = {} }: Blueprint3DAppBaseProps) {
       const fileName = planPdfFileName(planData)
       doc.save(fileName)
 
-      // Notify the site owner by email with the lead info and the same plan.
+      // Notify the site owner by submitting the lead + plan PDF to the Contact Form 7 endpoint.
       try {
-        const pdfBase64 = doc.output('datauristring').split(',')[1] ?? ''
-        const response = await fetch('/api/send-plan-lead', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            name: formData.name,
-            email: formData.email,
-            phone: formData.phone,
-            message: formData.message,
-            planName: planData.projectName,
-            roomCount: planData.roomCount,
-            floorSizeText: planData.floorSizeText,
-            totalItemCount: planData.totalItemCount,
-            items: planData.items,
-            pdfBase64,
-            pdfFileName: fileName
-          })
-        })
-        if (!response.ok) throw new Error('Request failed')
+        const pdfFile = new File([doc.output('blob')], fileName, { type: 'application/pdf' })
+
+        const submission = new FormData()
+        submission.append('_wpcf7_unit_tag', "wpcf7-f4f56f19-o1")
+        submission.append('your-name', formData.name)
+        submission.append('your-email', formData.email)
+        submission.append('tel-595', formData.phone)
+        submission.append('your-message', formData.message)
+        submission.append('file-355', pdfFile)
+
+        const response = await fetch(
+          'https://gebeluxe.com/wp-json/contact-form-7/v1/contact-forms/19924/feedback',
+          { method: 'POST', body: submission }
+        )
+        const result = await response.json()
+        if (result.status !== 'mail_sent') {
+          throw new Error(result.message || 'Form submission failed')
+        }
         toast.success(tDownload('success'))
       } catch (error) {
-        console.error('Failed to send plan lead email:', error)
+        console.error('Failed to submit plan lead form:', error)
         toast.error(tDownload('error'))
       }
     },
@@ -634,7 +633,7 @@ export function Blueprint3DAppBase({ config = {} }: Blueprint3DAppBaseProps) {
   )
 
   return (
-    <div className="relative h-full w-full flex flex-col">
+    <div style={{marginTop:'80px'}} className="relative h-full w-full flex flex-col">
       {/* Top Navigation Bar */}
       {!isFullscreen && (
         <div className="relative z-50 flex-shrink-0">
