@@ -20,10 +20,12 @@ interface ItemsListProps {
 
 const CATEGORY_KEYS = {
   all: 'all',
-  sofa: 'sofa'
+  sofa: 'sofa',
+  table: 'table',
+  lounger: 'lounger'
 } as const
 
-const CATEGORY_VALUES: Array<'all' | 'sofa'> = ['all', 'sofa']
+const CATEGORY_VALUES: Array<'all' | 'sofa' | 'table' | 'lounger'> = ['all', 'sofa', 'table', 'lounger']
 
 export function ItemsList({ onItemSelect, roomShape }: ItemsListProps) {
   const t = useTranslations('BluePrint.items')

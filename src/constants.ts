@@ -8,6 +8,7 @@ export type ItemCategory =
   | 'table'
   | 'chair'
   | 'sofa'
+  | 'lounger'
   | 'armchair'
   | 'stool'
   | 'door'
@@ -84,6 +85,72 @@ export const ITEMS: Item[] = [
     type: '1',
     category: 'sofa',
     // Model's authored scale renders ~11x too large otherwise; empirically tuned.
+    scale: { x: 0.1, y: 0.1, z: 0.1 }
+  },
+  {
+    key: 'coreSingleSeaterSofa',
+    name: 'Core Single Seater Sofa',
+    description: 'Core Single Seater Sofa',
+    image: '/images/core-single-seater-sofa.png',
+    model: '/models/core-one-seater-sofa.glb',
+    type: '1',
+    category: 'sofa',
+    // Model's authored scale renders far too large otherwise; empirically tuned.
+    scale: { x: 0.13, y: 0.13, z: 0.13 }
+  },
+  {
+    key: 'coreTwoSeaterSofa',
+    name: 'Core Two Seater Sofa',
+    description: 'Core Two Seater Sofa',
+    image: '/images/core-two-seater-sofa.png',
+    model: '/models/core-two-seater-sofa.glb',
+    type: '1',
+    category: 'sofa',
+    // Model's authored scale renders far too large otherwise; empirically tuned.
+    scale: { x: 0.13, y: 0.13, z: 0.13 }
+  },
+  {
+    key: 'coreThreeSeaterSofa',
+    name: 'Core Three Seater Sofa',
+    description: 'Core Three Seater Sofa',
+    image: '/images/core-three-seater-sofa.png',
+    model: '/models/core-three-seater-sofa.glb',
+    type: '1',
+    category: 'sofa',
+    // Model's authored scale renders far too large otherwise; empirically tuned.
+    scale: { x: 0.13, y: 0.13, z: 0.13 }
+  },
+  {
+    key: 'coreTable',
+    name: 'Core Table',
+    description: 'Core Table',
+    image: '/images/core-table.png',
+    model: '/models/core-table.glb',
+    type: '1',
+    category: 'table',
+    // Model's authored scale renders far too large otherwise; empirically tuned.
+    scale: { x: 0.16, y: 0.16, z: 0.16 }
+  },
+  {
+    key: 'cocoonDaybed',
+    name: 'Cocoon Daybed',
+    description: 'Cocoon Daybed',
+    image: '/images/cocoon-daybed.png',
+    model: '/models/cocoon-daybed.glb',
+    type: '1',
+    category: 'lounger',
+    // Model's authored scale renders far too large otherwise; empirically tuned.
+    scale: { x: 0.115, y: 0.115, z: 0.115 }
+  },
+  {
+    key: 'oraLounger',
+    name: 'Ora Lounger',
+    description: 'Ora Lounger',
+    image: '/images/ora-lounger.png',
+    model: '/models/ora-lounger.glb',
+    type: '1',
+    category: 'lounger',
+    // Model's authored scale renders far too large otherwise; empirically tuned.
     scale: { x: 0.1, y: 0.1, z: 0.1 }
   }
 ]

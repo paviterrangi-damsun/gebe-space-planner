@@ -633,12 +633,12 @@ export function Blueprint3DAppBase({ config = {} }: Blueprint3DAppBaseProps) {
   )
 
   return (
-    <div style={{marginTop:'80px'}} className="relative h-full w-full flex flex-col">
+    <div style={{marginTop:'60px'}} className="relative h-full w-full flex flex-col">
       {/* Top Navigation Bar */}
       {!isFullscreen && (
         <div className="relative z-50 flex-shrink-0">
           <div className="w-full text-center pt-5 mb-5">
-            <span style={{fontSize:'30px'}} className="font-normal text-foreground/80">{tApp('appTitle')}</span>
+            <span className="font-normal text-foreground/80">{tApp('appTitle')}</span>
           </div>
           <TopNavBar
             activeTab={activeTab}

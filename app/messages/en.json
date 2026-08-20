@@ -129,6 +129,7 @@
         "table": "Tables",
         "chair": "Chairs",
         "sofa": "Sofas",
+        "lounger": "Loungers",
         "armchair": "Armchairs",
         "stool": "Stools",
         "door": "Doors",
@@ -140,7 +141,13 @@
       "loadError": "Failed to load \"{name}\"",
       "kawaSingleSeaterSofa": "Kawa Single Seater Sofa",
       "kawaTwoSeaterSofa": "Kawa Two Seater Sofa",
-      "kawaThreeSeaterSofa": "Kawa Three Seater Sofa"
+      "kawaThreeSeaterSofa": "Kawa Three Seater Sofa",
+      "coreSingleSeaterSofa": "Core Single Seater Sofa",
+      "coreTwoSeaterSofa": "Core Two Seater Sofa",
+      "coreThreeSeaterSofa": "Core Three Seater Sofa",
+      "coreTable": "Core Table",
+      "cocoonDaybed": "Cocoon Daybed",
+      "oraLounger": "Ora Lounger"
     },
     "contextMenu": {
       "deleteItem": "Delete Item",
